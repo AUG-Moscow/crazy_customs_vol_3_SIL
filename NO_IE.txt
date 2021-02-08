@@ -1,0 +1,14 @@
+<script type="text/javascript">
+$(window).on("load", function() {
+      var container_block;
+      var block_to_insert
+      block_to_insert = document.createElement( 'div' )
+      if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
+       {
+               block_to_insert.innerHTML = '<div style="color: white; font-size: 13px; font-weight: 600; background: #cc0000; font-family: calibri">Не рекомендуется использовать Internet Explorer для работы с JIRA, пожалуйста используйте Google Chrome.</div>';
+               container_block = document.getElementById( "header" );
+               container_block.appendChild( block_to_insert );
+               block_to_insert.style.textAlign = "center";
+       } 
+});
+</script>
