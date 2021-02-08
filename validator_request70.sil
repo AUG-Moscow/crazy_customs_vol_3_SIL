@@ -1,0 +1,8 @@
+string errorMsg = "";
+if (customfield_10223=="Оборудование" && !hasInput("customfield_10221")) {
+    return false, errorMsg;
+} else if (customfield_10223=="ПО" && !hasInput("customfield_10222")){
+    return false, errorMsg;
+} else {
+    return true;
+}
