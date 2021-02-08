@@ -1,0 +1,19 @@
+if(argv["requestTypeId"] == 70 && argv["screen"] == "create"){
+    lfExecuteJS("request70.js");
+    lfHide("customfield_10221");
+    lfHide("customfield_10222");
+    lfHide("description");
+    lfWatch("customfield_10223", "customfield_10223", "LIVE FIELDS/type_hook.sil");
+}
+
+
+if(argv["screen"] == "view" || argv["screen"] == "edit"){
+    if (assignee=="admin_finam"){
+    lfShowFieldMessage("assignee", "Работает", "SUCCESS");
+} else if(assignee=="test_user")  {
+    lfShowFieldMessage("assignee", "В отпуске", "ERROR");
+} else {
+    lfHideFieldMessage("assignee");
+}
+    lfWatch("assignee", "assignee", "LIVE FIELDS/assignee_hook.sil");
+}
