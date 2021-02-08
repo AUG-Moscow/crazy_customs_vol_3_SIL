@@ -1,0 +1,11 @@
+if(argv["customfield_10223"]=="Оборудование"){
+    lfShow("customfield_10221");
+    lfHide("customfield_10222");
+    lfShow("description");
+
+} else if(argv["customfield_10223"]=="ПО"){
+    lfShow("customfield_10222");
+    lfHide("customfield_10221");
+    lfShow("description");
+ 
+}
