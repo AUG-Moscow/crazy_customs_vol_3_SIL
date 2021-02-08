@@ -1,0 +1,74 @@
+string[] statuses;
+function getStatusesTimeSpent(string issueKey) {
+    // function that returns a map with key status and value total time spent
+    interval[] result;
+    string[] statusHistory = fieldHistory(issueKey, "status");
+    date oldDate = %issueKey%.created;
+    if(!size(statusHistory) > 0) {
+        //status never changed
+        result[%issueKey%.status] = currentDate() - oldDate;
+        return result;
+    }
+     
+    string oldStatus = statusHistory[1];
+    interval timeSpent = 0;
+    number b=0; 
+    for(number i = 3; i < size(statusHistory); i += 2) {
+    statuses = arrayAddElementIfNotExist(statuses,getStatusNameById(oldStatus));
+   
+    
+        string newStatus = statusHistory[i];
+        date newDate = statusHistory[i-1];
+        timeSpent = newDate - oldDate;
+        if(isNotNull(result[oldStatus])) {
+        
+            // if issue already was in this status add the time interval to the time spent
+            result[oldStatus] = result[oldStatus] + timeSpent;
+            statuses = deleteElementAt(statuses, b);
+            
+        } else {
+            // otherwise set the time spent for this status
+            result[oldStatus] = timeSpent;
+            
+        }
+        oldStatus = newStatus;
+        oldDate = newDate;
+        b++;
+    }
+    //add also last status time interval
+    interval lastTime = currentDate() - oldDate;
+    if(isNotNull(result[oldStatus])) {
+        result[oldStatus] = result[oldStatus] + lastTime;
+    } else {
+        result[oldStatus] = lastTime;
+    }
+     
+    return result;
+}
+
+string[] timeSpentInStatuses = getStatusesTimeSpent(key);
+runnerLog("timeSpentInStatuses "+timeSpentInStatuses);
+runnerLog("statuses "+statuses);
+string[] wikifield;
+if (size(statuses)>0) {
+wikifield = arrayAddElement(wikifield, ("||Время||Статус||"+"\n"));
+for(number i = 0; i < size(statuses); i++){
+wikifield = arrayAddElement(wikifield,timeSpentInStatuses[i]+"|"+statuses[i]+"|"+"\n");
+}
+string[] statusHistory = fieldHistory(key, "status");
+runnerLog("statusHistory "+statusHistory);
+date inprgsdate;
+for(number i = 1; i < size(statusHistory); i += 2) {
+string teststatus=statusHistory[i];
+if (teststatus=="3"){
+        inprgsdate = statusHistory[i-1];
+        }
+}
+runnerLog("inprgsdate "+inprgsdate);
+interval fulltime= currentDate()-inprgsdate;
+string ft=fulltime;
+runnerLog("fulltime "+fulltime);
+wikifield = arrayAddElement(wikifield,ft+"| от В работе до даты |"+"\n");
+customfield_10224=wikifield;
+return wikifield;
+}
