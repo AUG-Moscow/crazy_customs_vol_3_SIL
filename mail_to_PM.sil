@@ -1,0 +1,35 @@
+string[] allprj=allProjects();
+for (string b in allprj){
+    string [] keys = selectIssues("project = "+b+" AND status=\"In progress\"");
+    string[] assignees;
+     for (string c in keys){
+        string sqlDo = “строка запроса с передачей даты и логина" ;
+        string [] results = sql(“наша БД", sqlDo);
+        number stat = results[X]; // номер элемента с кодом в полученном массиве
+        if (“код отпуска”){
+            assignees=addElementIfNotExist(assignees,%c%.assignee);
+        }
+        }
+        if (isNotNull(assignees)){
+            string PM=projectPM(b);
+            string PMmail=userEmailAddress(PM);
+            string[] to={PMmail};
+	string[] body;
+            body=addElement(body, "<html>");
+            body=addElement(body, "<body>");
+            body=addElement(body, "<font size = 1em color = #b35900>[Данное письмо сформировано автоматически, не нужно на него отвечать]</font><br>Уважаемые коллеги, вы получили данное уведомление, потому что в вашем проекте есть задачи в работе на исполнителях в отпусках.<hr>");
+            for (string d in assignees){
+                string [] keys1 = selectIssues("project = "+b+" AND status=\"In progress\" AND assignee="+d);
+                for (string e in keys1){
+                  body=addElement(body,"<a href=\"https://jira.ru/browse/"+e+"\">"+e+"</a>"+" - "+%e%.summary+" - ["+userFullName(d)+"]<br>");
+                }
+            }
+            body=addElement(body, "<hr><font size = 1em color = #b35900>[Данное письмо сформировано автоматически, не нужно на него отвечать]</font>");
+            body=addElement(body, "</body>");
+            body=addElement(body, "</html>");
+            
+            string body1=join(body, "");
+	sendEmail(to, {}, "В вашем проекте "+b+" есть задачи в работе на исполнителях в отпусках", body1);
+        }
+        
+}
